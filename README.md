@@ -1,7 +1,7 @@
 EPWTXhprofBundle
 ================
 
-[![Latest Stable Version](https://poser.pugx.org/epwt/xhprof/version.svg)](https://packagist.org/packages/epwt/xhprof) [![Latest Unstable Version](https://poser.pugx.org/epwt/xhprof/v/unstable.svg)](//packagist.org/packages/epwt/xhprof) [![Total Downloads](https://poser.pugx.org/epwt/xhprof/downloads.svg)](https://packagist.org/packages/epwt/xhprof)
+[![Latest Stable Version](https://poser.pugx.org/epwt/xhprof/version.svg)](https://packagist.org/packages/epwt/xhprof) [![Latest Unstable Version](https://poser.pugx.org/epwt/xhprof/v/unstable.svg)](//packagist.org/packages/epwt/xhprof) [![Total Downloads](https://poser.pugx.org/epwt/xhprof/downloads.svg)](https://packagist.org/packages/epwt/xhprof) [![Analytics](https://ga-beacon.appspot.com/UA-62064081-1/gcds/epwt-xhprof)](https://github.com/igrigorik/ga-beacon)
 
 EPWTXhprofBundle provides XHProf integration to Symfony profiler and wrapper for XHProf simple usage anywhere in project.
 
