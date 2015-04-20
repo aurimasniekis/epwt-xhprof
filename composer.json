@@ -1,0 +1,32 @@
+{
+    "name": "epwt/xhprof",
+    "type": "symfony-bundle",
+    "description": "EPWT XHProf Symfony Profiler Integration",
+    "keywords": ["epwt", "symfony", "bundle", "xhprof", "profiler"],
+    "homepage": "http://github.com/gcds/epwt-xhprof",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Aurimas Niekis",
+            "email": "aurimas.niekis@gmail.com",
+            "homepage": "https://github.com/gcds"
+        }
+    ],
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "facebook/xhprof": "dev-master"
+    },
+    "autoload": {
+        "files": [ "Resources/functions/xhprof.php" ],
+        "psr-0": { "EPWT\\XhprofBundle\\": "" }
+    },
+    "target-dir": "EPWT/XhprofBundle",
+    "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}

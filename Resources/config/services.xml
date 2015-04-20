@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="epwt_xhprof.xhprof.data_collector" class="EPWT\XhprofBundle\DataCollector\XhprofCollector">
+            <tag name="data_collector" template="EPWTXhprofBundle:Collector:xhprof" id="epwt_xhprof"/>
+            <call method="setXhprofHandler">
+                <argument type="service" id="epwt_xhprof.xhprof.handler"/>
+            </call>
+        </service>
+
+        <service id="epwt_xhprof.xhprof.handler" class="EPWT\XhprofBundle\Core\XhprofHandler"/>
+
+        <service id="epwt_xhprof.twig.number_formater.extension" class="EPWT\XhprofBundle\Twig\NumberFormatersExtension" public="false">
+            <tag name="twig.extension"/>
+        </service>
+    </services>
+</container>

@@ -1,0 +1,295 @@
+{% extends app.request.isXmlHttpRequest ? 'WebProfilerBundle:Profiler:ajax_layout.html.twig' : 'WebProfilerBundle:Profiler:layout.html.twig' %}
+
+{% block menu %}
+    <span class="label">
+    <span class="icon">{# icon by Apostolos Paschalidis interactivemania #}
+        <img width="28" height="28" alt="Time" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAB7UlEQVR42r2VTShEYRiFzfU3jRSi/CSRZEF2mFIjMxsbSrGwsaBYULbMykZZWtjZaEqpWVjMzspE2WosWJCIpY0U4+c66tw6fc3MvbkzM/X0fr/vmfPe77u3wrbtsuJpEX6BP8oiqELFEHUVY+wEPTJWMsFKxl2wz7ZVfEEmZqwHd+ADtPsV9eJuGthkS+ZK5vBIBB9Bsx+XbmK94IViWcbV/C7dT7NbOeMU+QLfbF+BoCR2FVIKXYUQyFDk23FI5g2Xuq8VLHsVVHdTIpACe9K/AJYI6b5NrgnLuCeHSRGYA12Gy2knoYj3yTNP5yq1viurQA37/eCVG59AB8cTIniSoyqHnHtnXOF4rSOq6upyQxInZHzYOTxkTOaiMv7F+ABa1KnTaAAxEAHj4Fo2TxouUjKXlLKmDbEfxgMQBk1a0hgnTTKgjmuqcjj5AN1gEdjiKu4ICzEVjEiCLKMNtsWBfqZOjRN8K/0drjlm/40x4sXhEOcto6yzcj9t4Rm0cc0AyJoO8z3DCTBa4MpY4IyJPokN1o3yDzJvFDQYp9QT6nLBEWS8kedt5Tn9AeMeCkxcwGUQXErJlvQPOW3JFzDeNP9yuUaxc1Dt9gL3I2gxNoJ7MGO48yfoUtoREJK50gia5SuLoJ5IH4Kl5Rd9TFtTIy1XIQAAAABJRU5ErkJggg=="></span>
+    <strong>XHProf</strong>
+    {% if collector.extensionLoaded %}
+        <span class="count">
+            <span>{{ collector.sessions }}</span>
+        </span>
+    {% else %}
+        <span class="count">
+            <span style="background-color: #a33;">#</span>
+        </span>
+    {% endif %}
+</span>
+{% endblock %}
+
+{% block toolbar %}
+    {% set icon %}
+        {# icon by Apostolos Paschalidis interactivemania #}
+        <img width="28" height="28" alt="Time" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAB7UlEQVR42r2VTShEYRiFzfU3jRSi/CSRZEF2mFIjMxsbSrGwsaBYULbMykZZWtjZaEqpWVjMzspE2WosWJCIpY0U4+c66tw6fc3MvbkzM/X0fr/vmfPe77u3wrbtsuJpEX6BP8oiqELFEHUVY+wEPTJWMsFKxl2wz7ZVfEEmZqwHd+ADtPsV9eJuGthkS+ZK5vBIBB9Bsx+XbmK94IViWcbV/C7dT7NbOeMU+QLfbF+BoCR2FVIKXYUQyFDk23FI5g2Xuq8VLHsVVHdTIpACe9K/AJYI6b5NrgnLuCeHSRGYA12Gy2knoYj3yTNP5yq1viurQA37/eCVG59AB8cTIniSoyqHnHtnXOF4rSOq6upyQxInZHzYOTxkTOaiMv7F+ABa1KnTaAAxEAHj4Fo2TxouUjKXlLKmDbEfxgMQBk1a0hgnTTKgjmuqcjj5AN1gEdjiKu4ICzEVjEiCLKMNtsWBfqZOjRN8K/0drjlm/40x4sXhEOcto6yzcj9t4Rm0cc0AyJoO8z3DCTBa4MpY4IyJPokN1o3yDzJvFDQYp9QT6nLBEWS8kedt5Tn9AeMeCkxcwGUQXErJlvQPOW3JFzDeNP9yuUaxc1Dt9gL3I2gxNoJ7MGO48yfoUtoREJK50gia5SuLoJ5IH4Kl5Rd9TFtTIy1XIQAAAABJRU5ErkJggg==">
+        {% if collector.extensionLoaded %}
+            <span class="sf-toolbar-status">{{ collector.sessions }}</span>
+        {% else %}
+            <span class="sf-toolbar-status sf-toolbar-status-red" title="XHProf extension disabled">#</span>
+        {% endif %}
+    {% endset %}
+    {% set text %}
+        {% if collector.extensionLoaded %}
+            <div class="sf-toolbar-info-piece">
+                <b>Profile Runs </b>
+                <span>{{ collector.sessions }}</span>
+            </div>
+        {% else %}
+            <div class="sf-toolbar-info-piece">
+                <span>XHProf extension disabled</span>
+            </div>
+        {% endif %}
+    {% endset %}
+    {% include 'WebProfilerBundle:Profiler:toolbar_item.html.twig' with { 'link': profiler_url } %}
+{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    <style>
+        th {
+            text-align: center;
+        }
+
+        .functionName {
+            font-family: monospace;
+            text-align: left;
+        }
+
+        .groupName {
+            float: right;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #666;
+            color: #fff;
+            padding: 2px 4px;
+            margin-right: 3px;
+        }
+
+        h2 > small {
+            font-size: 12px;
+        }
+
+        .tableWrapper {
+            overflow-x: scroll;
+        }
+
+        .metrics {
+            text-align: right;
+            font-family: monospace;
+        }
+
+        .measure {
+            width: 20px;
+            text-align: right;
+            float: right;
+            color: #666;
+        }
+    </style>
+    <script>
+        function showSample(name) {
+            document.getElementById('sampleNamesList').style.display = 'none';
+            var samples = document.getElementsByClassName('sample'), i;
+            for (i = 0; i < samples.length; i++) {
+                samples[i].style.display = 'none';
+            }
+            document.getElementById(name).style.display = 'block';
+
+            return false;
+        }
+
+        function backToList() {
+            var samples = document.getElementsByClassName('sample'), i;
+            for (i = 0; i < samples.length; i++) {
+                samples[i].style.display = 'none';
+            }
+
+            document.getElementById('sampleNamesList').style.display = 'block';
+
+            return false;
+        }
+
+        function showRun(name) {
+            var samples = document.getElementsByClassName('sample'), i;
+            for (i = 0; i < samples.length; i++) {
+                samples[i].style.display = 'none';
+            }
+
+            var samplesRuns = document.getElementsByClassName('sample_run');
+            for (i = 0; i < samplesRuns.length; i++) {
+                samplesRuns[i].style.display = 'none';
+            }
+
+            document.getElementById(name).style.display = 'block';
+
+            return false;
+        }
+
+        function backToRunList(name) {
+            var samples = document.getElementsByClassName('sample_run'), i;
+            for (i = 0; i < samples.length; i++) {
+                samples[i].style.display = 'none';
+            }
+
+            document.getElementById(name).style.display = 'block';
+
+            return false;
+        }
+    </script>
+{% endblock %}
+
+{% block panel %}
+
+    {% set typesData = collector.xhprofParser.typesData %}
+    <div class="sampleNames" id="sampleNamesList">
+        <h2>Samples Taken</h2>
+
+        <div class="tableWrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2">Name</th>
+                        <th rowspan="2">Samples</th>
+                        <th colspan="{{ collector.xhprofParser.calculatedPossibleMetrics|length + 1 }}">Metrics (Avg.)</th>
+                    </tr>
+                    <tr>
+                        <th>Calls</th>
+                        {% for metric in collector.xhprofParser.calculatedPossibleMetrics %}
+                        <th>{{ metric.title }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                {% for type in typesData %}
+                    <tr>
+                        <td class="functionName"><a href="#" onclick="showSample('{{ type.id }}')">{{ type.name }}</a></td>
+                        <td class="metrics">{{ type.runs|length }}</td>
+                        <td class="metrics">{{ type.stats.ct.avg }}</td>
+                        {% for metric, info in collector.xhprofParser.calculatedPossibleMetrics %}
+                            <td class="metrics">
+                            {% if type.stats[metric] is defined %}
+                            {{ type.stats[metric].avg|epwtXhprofFilter(info.filter) }}
+                            {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% for type in typesData %}
+    <div class="sample" id="{{ type.id }}" style="display: none;">
+        <h2>Samples: {{ type.name }}<br /><small><a href="#" onclick="backToList()">Back to list</a></small></h2>
+
+        <div class="tableWrapper">
+            <table class="statsTable">
+                <tr>
+                    <th></th>
+                    <th>Min.</th>
+                    <th>Max.</th>
+                    <th>Avg.</th>
+                    <th>approx. 95th percentile</th>
+                    <th>Mode</th>
+                </tr>
+                {% for metric, info in collector.xhprofParser.calculatedPossibleMetrics %}
+
+                <tr>
+                    <td>{{ info.title }}</td>
+                    {% if type.stats[metric] is defined %}
+                    <td class="metrics">{{ type.stats[metric].min|epwtXhprofFilter(info.filter) }}</td>
+                    <td class="metrics">{{ type.stats[metric].max|epwtXhprofFilter(info.filter) }}</td>
+                    <td class="metrics">{{ type.stats[metric].avg|epwtXhprofFilter(info.filter) }}</td>
+                    <td class="metrics">{{ type.stats[metric].percentile|epwtXhprofFilter(info.filter) }}</td>
+                    <td class="metrics">{{ type.stats[metric].mode|epwtXhprofFilter(info.filter) }}</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="tableWrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th rowspan="2">Run Id</th>
+                    <th rowspan="2">Timestamp</th>
+                    <th colspan="{{ collector.xhprofParser.calculatedPossibleMetrics|length }}" style="text-align: center">Metrics</th>
+                </tr>
+                <tr>
+                    {% for metric in collector.xhprofParser.calculatedPossibleMetrics %}
+                        <th>{{ metric.title }}</th>
+                    {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for run in type.runs %}
+                    <tr>
+                        <td class="functionName"><a href="#" onclick="showRun('{{ run.id }}')">{{ run.runId }}</a></td>
+                        <td class="metrics">{{ run.time|date("M d, Y H:i:s.u") }}</td>
+                        {% for metric, info in collector.xhprofParser.calculatedPossibleMetrics %}
+                            <td class="metrics">
+                                {% if run.stats[metric] is defined %}
+                                    {{ run.stats[metric]|epwtXhprofFilter(info.filter) }}
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% for run in type.runs %}
+        <div class="sample_run" id="{{ run.id }}" style="display: none;">
+            <h2>Sample: {{ type.name }} # {{ run.runId }}<br /><small><a href="#" onclick="backToRunList('{{ type.id }}')">Back to runs list</a></small></h2>
+
+            <div class="tableWrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Function</th>
+                            <th rowspan="2">Call Count</th>
+                            <th colspan="{{ collector.xhprofParser.calculatedPossibleMetrics|length }}">Inclusive</th>
+                            <th colspan="{{ collector.xhprofParser.calculatedPossibleMetrics|length }}">Exclusive</th>
+                        </tr>
+                        <tr>
+                            {% for metric in collector.xhprofParser.calculatedPossibleMetrics %}
+                                <th>{{ metric.title }}</th>
+                            {% endfor %}
+                            {% for metric in collector.xhprofParser.calculatedPossibleMetrics %}
+                                <th>{{ metric.title }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for function in run.callstack %}
+                        <tr>
+                            <td class="functionName">
+                                {{ function.callee }}
+                                {% if function.group %}
+                                <span class="groupName" style="background-color: {{ function.group.color }}">{{ function.group.friendlyName }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ function.stats.ct }}</td>
+                            {% for metric, info in collector.xhprofParser.calculatedPossibleMetrics %}
+                                <td class="metrics">
+                                    {% if function.stats[metric] is defined %}
+                                        {{ function.stats[metric]|epwtXhprofFilter(info.filter) }}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                            {% for metric, info in collector.xhprofParser.calculatedPossibleMetrics %}
+                                <td class="metrics">
+                                    {% if function.stats['excl_' ~ metric] is defined %}
+                                        {{ function.stats['excl_' ~ metric]|epwtXhprofFilter(info.filter) }}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endfor %}
+    {% endfor %}
+{% endblock %}
