@@ -8,6 +8,7 @@ EPWTXhprofBundle provides XHProf integration to Symfony profiler and wrapper for
 [![Toolbar](Resources/meta/toolbar.small.png?raw=true "Toolbar")](Resources/meta/toolbar.png)
 
 [![Samples List](Resources/meta/samples_list.small.png?raw=true "Samples List")](Resources/meta/samples_list.png) [![Sample Runs](Resources/meta/sample_runs.small.png?raw=true "Sample Runs")](Resources/meta/sample_runs.png) [![Sample Run](Resources/meta/sample_run.small.png?raw=true "Sample Run")](Resources/meta/sample_run.png)
+[![Full Sample Run](Resources/meta/full_sample.small.png?raw=true "Full Sample Run")](Resources/meta/full_sample.png)
 
 ## Requirements
 
